@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('srt', help='srt location')
 parser.add_argument('name', help='movie name')
 parser.add_argument('--length', default=8, help='minimum length of line')
-parser.add_argument('--delete', action='store_true', help='delete original script when done')
+parser.add_argument('--delete', action='store_true', help='delete original')
 args = parser.parse_args()
 
 if not os.path.exists(args.name):
@@ -28,16 +28,14 @@ def lineScrubber(line):
     return line
 
 brokenLines = []
-def lineAdder(line):
-    if len(line) > args.length:
-        # add it with non-ascii stripped
-        brokenLines.append("".join(i for i in line if ord(i)<128))
-
 for line in map(lineScrubber, subTexts):
     splitLines = re.split('\? |\! |(?<!Mr)(?<!Mrs)\. ', line)
-    map(lineAdder, splitLines)
+    for splitLine in splitLines:
+        if len(splitLine) > args.length:
+            # add it with non-ascii stripped
+            brokenLines.append("".join(i for i in splitLine if ord(i) < 128))
 
-lineFile = open(args.name + '/lines.txt','w')
+lineFile = open(args.name + '/lines.txt', 'w')
 lineFile.write('\n'.join(brokenLines))
 lineFile.close()
 
