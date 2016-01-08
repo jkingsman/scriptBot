@@ -30,7 +30,7 @@ for line in map(lineScrubber, subTexts):
         if len(splitLine) > args.length:
             brokenLines.append(splitLine)
 
-lineFile = open(args.name + '-lines.txt', 'w')
+lineFile = open('processed/' + args.name + '-lines.txt', 'w')
 lineFile.write('\n'.join(brokenLines))
 lineFile.close()
 
