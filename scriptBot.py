@@ -13,18 +13,14 @@ parser.add_argument('--length', default=8, help='minimum length of line')
 parser.add_argument('--delete', action='store_true', help='delete original')
 args = parser.parse_args()
 
-if not os.path.exists(args.name):
-    os.makedirs(args.name)
-
-shutil.copyfile(args.srt, args.name + '/script.srt')
-subs = pysrt.open(args.name + '/script.srt')
-subTexts = [sub.text for sub in pysrt.open(args.name + '/script.srt')]
-
+subTexts = [sub.text for sub in pysrt.open(args.srt)]
 
 def lineScrubber(line):
     line = line.replace('<i>', '').replace('</i>', '')
     line = line.replace('\n', ' ')
     line = line.replace('- ', '')
+    # scrub non-ascii
+    line = "".join(char for char in line if ord(char) < 128)
     return line
 
 brokenLines = []
@@ -32,10 +28,9 @@ for line in map(lineScrubber, subTexts):
     splitLines = re.split('\? |\! |(?<!Mr)(?<!Mrs)\. ', line)
     for splitLine in splitLines:
         if len(splitLine) > args.length:
-            # add it with non-ascii stripped
-            brokenLines.append("".join(i for i in splitLine if ord(i) < 128))
+            brokenLines.append(splitLine)
 
-lineFile = open(args.name + '/lines.txt', 'w')
+lineFile = open(args.name + '-lines.txt', 'w')
 lineFile.write('\n'.join(brokenLines))
 lineFile.close()
 
