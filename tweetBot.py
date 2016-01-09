@@ -4,32 +4,27 @@ import argparse
 import twitter
 import random
 import time
+import json
 
 parser = argparse.ArgumentParser()
-parser.add_argument('lines', help='location of the lines file')
-parser.add_argument('key', help='application key')
-parser.add_argument('secret', help='application secret')
-parser.add_argument('oauthtoken', help='oauth token')
-parser.add_argument('oauth_secret', help='oauth secret')
-parser.add_argument('interval', help='tweet interval in seconds')
+parser.add_argument('buildfile', help='built line file location')
 args = parser.parse_args()
 
-api = twitter.Api(consumer_key = args.key, consumer_secret = args.secret,
-    access_token_key = args.oauthtoken, access_token_secret = args.oauth_secret)
-
-print "Connected to twitter"
-
-with open(args.lines) as lineFile:
-    lines = lineFile.readlines()
+with open(args.buildfile) as buildfile:
+    builtObject = json.load(buildfile)
 
 print "Lines loaded"
 
+api = twitter.Api(consumer_key = builtObject['key'], consumer_secret = builtObject['secret'],
+    access_token_key = builtObject['oauthtoken'], access_token_secret = builtObject['oauthsecret'])
+
+print "Connected to twitter"
 
 def tweetLine():
-    randLine = random.choice(lines)
+    randLine = random.choice(builtObject['lines'])
     api.PostUpdate(status=randLine)
     print "Tweeted '" + randLine.strip('\n') + "'"
-    time.sleep(int(args.interval))
+    time.sleep(int(builtObject['interval']))
 
 while True:
     tweetLine()

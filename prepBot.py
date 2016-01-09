@@ -5,13 +5,19 @@ import os
 import shutil
 import pysrt
 import re
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument('srt', help='srt location')
-parser.add_argument('name', help='movie name')
-parser.add_argument('--length', default=8, help='minimum length of line')
-parser.add_argument('--delete', action='store_true', help='delete original')
 args = parser.parse_args()
+
+title = raw_input("Movie name: ")
+lineLength = raw_input("Min line length: ")
+interval = raw_input("Seconds between tweets: ")
+key = raw_input("Application key: ")
+secret = raw_input("Application secret: ")
+oauthtoken = raw_input("OAuth token: ")
+oauthsecret = raw_input("OAuth secret: ")
 
 subTexts = [sub.text for sub in pysrt.open(args.srt)]
 
@@ -27,14 +33,20 @@ brokenLines = []
 for line in map(lineScrubber, subTexts):
     splitLines = re.split('\? |\! |(?<!Mr)(?<!Mrs)\. ', line)
     for splitLine in splitLines:
-        if len(splitLine) > args.length:
+        if len(splitLine) > int(lineLength):
             brokenLines.append(splitLine)
 
-lineFile = open('processed/' + args.name + '-lines.txt', 'w')
-lineFile.write('\n'.join(brokenLines))
+movieData = {}
+movieData['title'] = title
+movieData['key'] = key
+movieData['secret'] = secret
+movieData['oauthtoken'] = oauthtoken
+movieData['oauthsecret'] = oauthsecret
+movieData['interval'] = interval
+movieData['lines'] = brokenLines
+
+lineFile = open('processed/' + title + '.build', 'w')
+lineFile.write(json.dumps(movieData))
 lineFile.close()
 
 print "Script dumped;", len(brokenLines), "lines"
-
-if args.delete:
-    os.remove(args.srt)
