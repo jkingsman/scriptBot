@@ -12,7 +12,7 @@ parser.add_argument('srt', help='srt location')
 args = parser.parse_args()
 
 title = raw_input("Movie name: ")
-lineLength = raw_input("Min line length: ")
+lineLength = raw_input("Minimum line length to use (in characters): ")
 interval = raw_input("Seconds between tweets: ")
 key = raw_input("Application key: ")
 secret = raw_input("Application secret: ")
