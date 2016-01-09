@@ -22,9 +22,14 @@ print "Connected to twitter"
 
 def tweetLine():
     randLine = random.choice(builtObject['lines'])
-    api.PostUpdate(status=randLine)
-    print "Tweeted '" + randLine.strip('\n') + "'"
-    time.sleep(int(builtObject['interval']))
+    try:
+        api.PostUpdate(status=randLine)
+        print "Tweeted '" + randLine.strip('\n') + "'"
+        time.sleep(int(builtObject['interval']))
+    except TwitterError as e:
+        # 99% of the time, this is a duplicate tweet
+        print "Skipping duplicate"
+    
 
 print "Tweeting lines from", builtObject['title'], "every", builtObject['interval'], "seconds"
 
