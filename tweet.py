@@ -26,5 +26,7 @@ def tweetLine():
     print "Tweeted '" + randLine.strip('\n') + "'"
     time.sleep(int(builtObject['interval']))
 
+print "Tweeting lines from", builtObject['title'], "every", builtObject['interval'], "seconds"
+
 while True:
     tweetLine()
