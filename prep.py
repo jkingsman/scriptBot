@@ -31,7 +31,7 @@ def lineScrubber(line):
 
 brokenLines = []
 for line in map(lineScrubber, subTexts):
-    splitLines = re.split('\? |\! |(?<!Mr)(?<!Mrs)\. ', line)
+    splitLines = re.split('\? |\! |(?<!Mr)(?<!Mrs)(?<!Ms)(?<!St)\. ', line)
     for splitLine in splitLines:
         if len(splitLine) > int(lineLength):
             brokenLines.append(splitLine)
