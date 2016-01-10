@@ -1,4 +1,6 @@
 # scriptBot
+Tweet random lines from movie dialogues, sourced subtitle files.
+
 
 ## Preparation
 Dump individual lines of dialogue from an SRT file. [YIFY](http://www.yifysubtitles.com/) is a good source for these.
