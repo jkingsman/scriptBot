@@ -26,9 +26,9 @@ def tweetLine():
         api.PostUpdate(status=randLine)
         print "Tweeted '" + randLine.strip('\n') + "'"
         time.sleep(int(builtObject['interval']))
-    except TwitterError as e:
+    except:
         # 99% of the time, this is a duplicate tweet
-        print "Skipping duplicate"
+        print "Skipping duplicate/error"
     
 
 print "Tweeting lines from", builtObject['title'], "every", builtObject['interval'], "seconds"
